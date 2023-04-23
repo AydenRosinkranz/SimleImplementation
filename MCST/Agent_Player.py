@@ -1,3 +1,4 @@
+import MCSTNode
 class GameStatus:
     def __init__(self):
         self.board = [[' ' for _ in range(3)] for _ in range(3)]
@@ -54,13 +55,16 @@ class HumanPlayer(Player):
 
 
 class ComputerPlayer(Player):
-    def __init__(self, symbol, num_simulations=1000):
-        super().__init__(symbol)
-        self.num_simulations = num_simulations
-    def get_move(self,game_status):
-        row = int(input("Enter row: ")) - 1
-        col = int(input("Enter column: ")) - 1
-        return row, col
+    def __init__(self, root_board):
+        self.root = MCSTNode(root_board)
+
+    def search(self, iterations):
+        # Perform the MCTS for the specified number of iterations
+        pass
+
+    def best_move(self):
+        # Return the best move after the search is complete
+        pass
 
 
 

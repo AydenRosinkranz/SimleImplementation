@@ -1,3 +1,68 @@
+import random
+class MCSTNode:
+    def __init__(self, board, move=None, parent=None):
+        self.board = board  # The current game state
+        self.move = move  # The move that led to this state (None for the root node)
+        self.parent = parent  # The parent node in the MCTS tree
+        self.children = []  # List of child nodes in the MCTS tree
+        self.wins = 0  # Number of wins from this node
+        self.visits = 0  # Number of visits to this node
+
+    def is_fully_expanded(self):
+        unexplored_moves = [
+            (i, j)
+            for i in range(3)
+            for j in range(3)
+            if self.board.state[i][j] == ' '
+        ]
+
+        return len(unexplored_moves) == len(self.children)
+
+    def is_terminal(self):
+        return self.board.is_game_over()
+
+    def best_child(self, c_param=1.4):
+        best_score = -float("inf")
+        best_child = None
+
+        for child in self.children:
+            exploitation = child.wins / child.visits
+            exploration = c_param * ((self.visits)**0.5) / (1 + child.visits)
+            score = exploitation + exploration
+
+            if score > best_score:
+                best_score = score
+                best_child = child
+
+        return best_child
+
+    def expand(self, player):
+        unexplored_moves = [
+            (i, j)
+            for i in range(3)
+            for j in range(3)
+            if self.board.state[i][j] == ' '
+        ]
+
+        if not unexplored_moves:
+            return None
+
+        move = random.choice(unexplored_moves)
+        new_board = self.board.copy()
+        new_board.make_move(move[0], move[1], player)
+
+        child_node = MCSTNode(new_board, move, self)
+        self.children.append(child_node)
+
+        return child_node
+
+    def backpropagate(self, result):
+        self.visits += 1
+        self.wins += result
+
+        if self.parent:
+            self.parent.backpropagate(1 - result)  # Invert the result for the parent node
+# original: for logical comparison
 # def get_move(self, game_status):
 #     root = Node(game_status.board)
 #     for i in range(self.num_simulations):
