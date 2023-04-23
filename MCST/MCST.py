@@ -62,6 +62,7 @@ class MCSTNode:
 
         if self.parent:
             self.parent.backpropagate(1 - result)  # Invert the result for the parent node
+# further implement in schedule but maybe need some integration with ComputerPlayer class.
 # original: for logical comparison
 # def get_move(self, game_status):
 #     root = Node(game_status.board)
